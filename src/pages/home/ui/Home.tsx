@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { filteredPostsOnNewest } from 'features/filtered-posts-on-newest/filteredPostsOnNewest'
 import { filteredPostsOnOldest } from 'features/filtered-posts-on-oldest/filteredPostsOnOldest'
 import { loadData } from 'features/load-data-from-json/loadDataFromJson'
+import { Button } from 'shared/ui/button/Button'
 import styles from './Home.module.css'
 
 export type Post = {
@@ -29,20 +30,18 @@ export const Home = () => {
 			<h1 className={styles.title}>Лента постов</h1>
 
 			<div className='flex gap-2 mb-4'>
-				<button
-					className='cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition'
+				<Button
+					variant='blue'
 					onClick={() => filteredPostsOnOldest(posts, setPosts)}
 				>
 					Сначала старые
-				</button>
-				<button
-					className='cursor-pointer bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded transition'
-					onClick={() => {
-						filteredPostsOnNewest(posts, setPosts)
-					}}
+				</Button>
+				<Button
+					variant='purple'
+					onClick={() => filteredPostsOnNewest(posts, setPosts)}
 				>
 					Сначала новые
-				</button>
+				</Button>
 			</div>
 
 			<div className={styles.createPost}>
