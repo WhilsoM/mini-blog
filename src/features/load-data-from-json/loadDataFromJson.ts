@@ -9,6 +9,7 @@ export const loadData = async (
 
 		if (savedPosts) {
 			const parsedPosts = JSON.parse(savedPosts) as Post[]
+
 			setPosts(parsedPosts)
 			return parsedPosts
 		} else {

@@ -9,8 +9,10 @@ export const PostById = () => {
 		(post: Post) => post.id === Number(id)
 	)
 	return (
-		<div>
-			<Link to='/'>Назад</Link>
+		<div className='bg-gray-200 p-4 rounded-sm'>
+			<Link className='text-gray-500 hover:text-gray-700 mb-4 block' to='/'>
+				Назад
+			</Link>
 			<h3>{post.author}</h3>
 			<p>{post.date}</p>
 			<p>{post.content}</p>

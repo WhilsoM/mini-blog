@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom'
 import { filteredPostsOnNewest } from 'features/filtered-posts-on-newest/filteredPostsOnNewest'
 import { filteredPostsOnOldest } from 'features/filtered-posts-on-oldest/filteredPostsOnOldest'
 import { loadData } from 'features/load-data-from-json/loadDataFromJson'
+import { motion } from 'motion/react'
 import { useSearch } from 'shared/context/SearchContext'
 import { Button } from 'shared/ui/button/Button'
 import styles from './Home.module.css'
-
 export type Post = {
 	id: number
 	author: string
@@ -19,33 +19,32 @@ export type Post = {
 
 export const Home = () => {
 	const [posts, setPosts] = useState<Post[]>([])
-	const [postText, setPostText] = useState<string>('')
+	const [postText, setPostText] = useState('')
 	const [nickname, setNickname] = useState('')
 	const { searchInputText } = useSearch()
-	const [allPosts, setAllPosts] = useState<Post[]>([])
 
 	useEffect(() => {
-		const init = async () => {
+		const fetchData = async () => {
 			const loadedPosts = await loadData(setPosts)
-			setAllPosts(loadedPosts || [])
+			setPosts(loadedPosts)
 		}
-		init()
+
+		fetchData()
 	}, [])
 
-	// Фильтрация постов по поисковому запросу
 	useEffect(() => {
 		if (!searchInputText) {
-			setPosts(allPosts)
+			setPosts(posts)
 			return
 		}
 
-		const filtered = allPosts.filter(
+		const filtered = posts.filter(
 			(post) =>
 				post.content.toLowerCase().includes(searchInputText.toLowerCase()) ||
 				post.author.toLowerCase().includes(searchInputText.toLowerCase())
 		)
 		setPosts(filtered)
-	}, [searchInputText, allPosts])
+	}, [searchInputText, posts])
 
 	return (
 		<div className={styles.home}>
@@ -77,7 +76,10 @@ export const Home = () => {
 			)}
 
 			<div className={styles.createPost}>
-				<input
+				<motion.input
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.5 }}
 					type='text'
 					placeholder='Ваше имя:'
 					value={nickname}
@@ -85,25 +87,19 @@ export const Home = () => {
 					onChange={(e) => setNickname(e.target.value)}
 				/>
 
-				<textarea
+				<motion.textarea
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ duration: 0.6 }}
 					className={styles.postInput}
 					placeholder='Что у вас нового?'
 					value={postText}
 					onChange={(e) => setPostText(e.target.value)}
 				/>
 				<button
-					onClick={() => {
-						const newPost = createPost(
-							postText,
-							nickname,
-							posts,
-							setPosts,
-							setPostText
-						)
-						if (newPost) {
-							setAllPosts((prev) => [newPost, ...prev])
-						}
-					}}
+					onClick={() =>
+						createPost(postText, nickname, posts, setPosts, setPostText)
+					}
 					className={styles.postButton}
 					disabled={!postText.trim()}
 				>
@@ -120,7 +116,13 @@ export const Home = () => {
 					</div>
 				) : (
 					posts.map((post) => (
-						<div key={post.id} className={styles.post}>
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ duration: 0.5 }}
+							key={post.id}
+							className={styles.post}
+						>
 							<div className={styles.postHeader}>
 								<img
 									src={post.avatar}
@@ -134,7 +136,7 @@ export const Home = () => {
 							</div>
 							<div className={styles.postContent}>{post.content}</div>
 							<Link to={`post/${post.id}`}>Читать далее</Link>
-						</div>
+						</motion.div>
 					))
 				)}
 			</div>
