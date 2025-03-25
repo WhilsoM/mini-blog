@@ -1,0 +1,44 @@
+.sidebar {
+	width: 250px;
+	background-color: #f0f2f5;
+	height: 100%;
+	position: fixed;
+	top: 60px;
+	padding: 20px 0;
+	overflow-y: auto;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navigation {
+	width: 100%;
+}
+
+.navList {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.navItem {
+	margin-bottom: 8px;
+}
+
+.navLink {
+	display: block;
+	padding: 10px 16px;
+	color: #2a5885;
+	text-decoration: none;
+	font-size: 16px;
+	border-radius: 4px;
+	transition: background-color 0.2s;
+}
+
+.navLink:hover {
+	background-color: rgba(174, 183, 194, 0.12);
+}
+
+/* Активная ссылка */
+.navLinkActive {
+	font-weight: bold;
+	background-color: rgba(174, 183, 194, 0.2);
+}
