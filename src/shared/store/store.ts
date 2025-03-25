@@ -1,3 +1,5 @@
 import { createContext } from 'react'
 
-export const PostByIdContext = createContext([])
+// Устаревшая версия контекста, для обратной совместимости
+// Рекомендуется использовать SearchContext из 'shared/context/SearchContext'
+export const SearchInputText = createContext('')

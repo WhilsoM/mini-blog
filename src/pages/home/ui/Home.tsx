@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { filteredPostsOnNewest } from 'features/filtered-posts-on-newest/filteredPostsOnNewest'
 import { filteredPostsOnOldest } from 'features/filtered-posts-on-oldest/filteredPostsOnOldest'
 import { loadData } from 'features/load-data-from-json/loadDataFromJson'
+import { useSearch } from 'shared/context/SearchContext'
 import { Button } from 'shared/ui/button/Button'
 import styles from './Home.module.css'
 
@@ -20,10 +21,31 @@ export const Home = () => {
 	const [posts, setPosts] = useState<Post[]>([])
 	const [postText, setPostText] = useState<string>('')
 	const [nickname, setNickname] = useState('')
+	const { searchInputText } = useSearch()
+	const [allPosts, setAllPosts] = useState<Post[]>([])
 
 	useEffect(() => {
-		loadData(setPosts)
+		const init = async () => {
+			const loadedPosts = await loadData(setPosts)
+			setAllPosts(loadedPosts || [])
+		}
+		init()
 	}, [])
+
+	// Фильтрация постов по поисковому запросу
+	useEffect(() => {
+		if (!searchInputText) {
+			setPosts(allPosts)
+			return
+		}
+
+		const filtered = allPosts.filter(
+			(post) =>
+				post.content.toLowerCase().includes(searchInputText.toLowerCase()) ||
+				post.author.toLowerCase().includes(searchInputText.toLowerCase())
+		)
+		setPosts(filtered)
+	}, [searchInputText, allPosts])
 
 	return (
 		<div className={styles.home}>
@@ -44,6 +66,16 @@ export const Home = () => {
 				</Button>
 			</div>
 
+			{searchInputText && (
+				<div className={styles.searchResults}>
+					Результаты поиска по запросу:{' '}
+					<span className={styles.searchQuery}>{searchInputText}</span>
+					{posts.length === 0 && (
+						<div className={styles.noResults}>Ничего не найдено</div>
+					)}
+				</div>
+			)}
+
 			<div className={styles.createPost}>
 				<input
 					type='text'
@@ -60,9 +92,18 @@ export const Home = () => {
 					onChange={(e) => setPostText(e.target.value)}
 				/>
 				<button
-					onClick={() =>
-						createPost(postText, nickname, posts, setPosts, setPostText)
-					}
+					onClick={() => {
+						const newPost = createPost(
+							postText,
+							nickname,
+							posts,
+							setPosts,
+							setPostText
+						)
+						if (newPost) {
+							setAllPosts((prev) => [newPost, ...prev])
+						}
+					}}
 					className={styles.postButton}
 					disabled={!postText.trim()}
 				>
@@ -72,7 +113,11 @@ export const Home = () => {
 
 			<div className={styles.posts}>
 				{posts.length === 0 ? (
-					<div className={styles.noPosts}>Пока нет постов. Будьте первым!</div>
+					<div className={styles.noPosts}>
+						{searchInputText
+							? 'По вашему запросу ничего не найдено'
+							: 'Пока нет постов. Будьте первым!'}
+					</div>
 				) : (
 					posts.map((post) => (
 						<div key={post.id} className={styles.post}>

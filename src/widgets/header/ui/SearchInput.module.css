@@ -1,0 +1,44 @@
+.searchContainer {
+	position: relative;
+	width: 100%;
+	max-width: 320px;
+}
+
+.searchInput {
+	width: 100%;
+	background-color: #224b7a;
+	border: none;
+	border-radius: 18px;
+	color: white;
+	padding: 8px 15px;
+	padding-right: 35px; /* Место для кнопки очистки */
+	outline: none;
+}
+
+.searchInput::placeholder {
+	color: #8eaaca;
+}
+
+.clearButton {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	color: #8eaaca;
+	cursor: pointer;
+	font-size: 12px;
+	padding: 0;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+}
+
+.clearButton:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+	color: white;
+}
