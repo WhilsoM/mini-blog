@@ -1,11 +1,8 @@
 import { NavLink } from 'react-router-dom'
-import { useSearch } from 'shared/context/SearchContext'
 import styles from './Header.module.css'
 import { SearchInput } from './SearchInput'
 
 export const Header = () => {
-	const { searchInputText } = useSearch()
-
 	return (
 		<header className={styles.header}>
 			<div className={styles.container}>
